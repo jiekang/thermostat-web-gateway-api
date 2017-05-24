@@ -91,7 +91,7 @@ paths:
           description: OK
 
 definitions:
-  jvm-info:
+  jvm-get-info:
     type: object
     properties:
       systemId:
@@ -139,6 +139,51 @@ definitions:
         type: integer
         format: int64
 
+  jvm-post-info:
+    type: object
+    properties:
+      agentId:
+        type: string
+      jvmId:
+        type: string
+      mainClass:
+        type: string
+      startTime:
+        type: integer
+        format: int64
+      endTime:
+        type: integer
+        format: int64
+      jvmPid:
+        type: integer
+      javaVersion:
+        type: string
+      javaHome:
+        type: string
+      javaCommandLine:
+        type: string
+      jvmArguments:
+        type: string
+      jvmName:
+        type: string
+      jvmInfo:
+        type: string
+      jvmVersion:
+        type: string
+      classpath:
+        type: string
+      environment:
+        type: array
+        items:
+          $ref: '#/definitions/environment-items'
+      uid:
+        type: integer
+        format: int64
+      username:
+        type: string
+      last_updated:
+        type: integer
+        format: int64
   environment-items:
     type: object
     properties:
@@ -153,7 +198,7 @@ definitions:
       response:
         type: array
         items:
-          $ref: '#/definitions/jvm-info'
+          $ref: '#/definitions/jvm-get-info'
   jvms-put-body:
     type: object
     properties:
@@ -162,7 +207,7 @@ definitions:
   jvms-post-body:
     type: array
     items:
-      $ref: '#/definitions/jvm-info'
+      $ref: '#/definitions/jvm-post-info'
 
   update-put-body:
     type: array
@@ -178,7 +223,7 @@ definitions:
       jvms:
         type: array
         items:
-          $ref: '#/definitions/jvm-info'
+          $ref: '#/definitions/jvm-get-info'
 parameters:
   system-id:
     name: systemId
