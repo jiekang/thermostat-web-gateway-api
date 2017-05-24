@@ -135,7 +135,7 @@ definitions:
         format: int64
       username:
         type: string
-      last_updated:
+      lastUpdated:
         type: integer
         format: int64
 
@@ -151,7 +151,7 @@ definitions:
       startTime:
         type: integer
         format: int64
-      endTime:
+      stopTime:
         type: integer
         format: int64
       jvmPid:
@@ -181,7 +181,7 @@ definitions:
         format: int64
       username:
         type: string
-      last_updated:
+      lastUpdated:
         type: integer
         format: int64
   environment-items:
