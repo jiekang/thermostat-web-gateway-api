@@ -77,11 +77,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/jvm-info'
-    delete:
-      description: 'Delete the JVM with id {jvmId} running on system {systemId}'
-      responses:
-        '200':
-          description: OK
     put:
       description: 'Update the JVM with id {jvmId} running on system {systemId}'
       responses:
@@ -89,6 +84,11 @@ paths:
           description: OK
       parameters:
       - $ref: "#/parameters/put-body-jvm"
+    delete:
+      description: 'Delete the JVM with id {jvmId} running on system {systemId}'
+      responses:
+        '200':
+          description: OK
 definitions:
   jvm-infos:
     type: array
