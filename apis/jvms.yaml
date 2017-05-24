@@ -14,16 +14,8 @@ basePath: /jvms/0.0.1
 paths:
   '/update/systems/{systemId}/ts/{timeStamp}':
     parameters:
-      - name: systemId
-        in: path
-        required: true
-        type: string
-        description: The system ID of the jvms to update.
-      - name: timeStamp
-        in: path
-        required: true
-        type: string
-        description: The timestamp to set the last_updated field for.
+      - $ref: '#/parameters/system-id'
+      - $ref: '#/parameters/timestamp'
     put:
       description: 'Set last updated for jvm information to {timeStamp}'
       responses:
@@ -33,11 +25,7 @@ paths:
       - $ref: "#/parameters/put-body-jvms-update"
   '/systems/{systemId}':
     parameters:
-      - name: systemId
-        in: path
-        required: true
-        type: string
-        description: The system ID for the jvms.
+      - $ref: '#/parameters/system-id'
     get:
       description: 'Get jvms for system {systemId}'
       parameters:
@@ -71,6 +59,8 @@ paths:
         - $ref: '#/parameters/alive-only'
         - $ref: '#/parameters/include'
         - $ref: '#/parameters/exclude'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'        
       responses:
         '200':
           description: OK
@@ -78,16 +68,8 @@ paths:
             $ref: '#/definitions/jvm-list-response'
   '/systems/{systemId}/jvms/{jvmId}':
     parameters:
-    - name: systemId
-      in: path
-      required: true
-      type: string
-      description: The system ID
-    - name: jvmId
-      in: path
-      required: true
-      type: string
-      description: The ID of the jvm
+    - $ref: '#/parameters/system-id'
+    - $ref: '#/parameters/jvm-id'
     get:
       description: 'Get information for the JVM with id {jvmId} running on system {systemId}'
       responses:
@@ -190,6 +172,24 @@ definitions:
     items:
       type: string
 parameters:
+  system-id:
+    name: systemId
+    in: path
+    required: true
+    type: string
+    description: The system ID for the jvms
+  jvm-id:
+    name: jvmId
+    in: path
+    required: true
+    type: string
+    description: The ID of the jvm
+  timestamp:
+    name: timeStamp
+    in: path
+    required: true
+    type: string
+    description: The timestamp to set the last_updated field for.
   jvm-infos:
     name: jvm-infos
     in: body
