@@ -1,0 +1,125 @@
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: Thermostat Web Gateway System Information API
+  license:
+    name: GPL v2 with Classpath Exception
+    url: 'http://www.gnu.org/licenses'
+consumes:
+  - application/json
+produces:
+  - application/json
+  - text/html; charset=utf-8
+basePath: /0.0.1
+paths:
+  /:
+    get:
+      description: Get system information.
+      parameters:
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/sort'
+        - $ref: '#/parameters/projection'
+        - $ref: '#/parameters/query'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/system-info-response'
+    put:
+      description: Update system information.
+      parameters:
+        - $ref: '#/parameters/put-body'
+        - $ref: '#/parameters/query'
+      responses:
+        '200':
+          description: OK
+    post:
+      description: Add system information
+      parameters:
+        - $ref: '#/parameters/system-info-array'
+      responses:
+        '200':
+          description: OK
+    delete:
+      description: Delete system information.
+      parameters:
+        - $ref: '#/parameters/query'
+      responses:
+        '200':
+          description: OK
+definitions:
+  system-info-response:
+    type: object
+    properties:
+      response:
+          $ref: '#/definitions/system-info-array'
+  system-info-array:
+    type: array
+    items:
+      $ref: '#/definitions/system-info'
+  system-info:
+    type: object
+    properties:
+      systemId:
+        type: string
+      agentId:
+        type: string
+      hostname:
+        type: string
+      osName:
+        type: string
+      osKernel:
+        type: string
+      cpuCount:
+        type: integer
+      cpuModel:
+        type: string
+      totalMemory:
+        type: integer
+        format: int64
+  put-body:
+    type: object
+    properties:
+      "set":
+        type: object
+parameters:
+  system-info-array:
+    name: system-info-array
+    in: body
+    description: The system information
+    required: true
+    schema:
+      $ref: '#/definitions/system-info-array'
+  put-body:
+    name: putBody
+    in: body
+    description: "The JSON object containing a 'set' object. This contains single item JSON objects that specify the field to replace and the JSON value to replace with. Example { \"set\" : { \"field\" : \"value\", \"field2\":{\"object\":\"item\"} }"
+    required: true
+    schema:
+      $ref: '#/definitions/put-body'
+  limit:
+    name: l
+    in: query
+    description: Limit of items to return. Example '1'
+    type: integer
+  offset:
+    name: o
+    in: query
+    description: Offset of items to return. Example '0'
+    type: integer
+  sort:
+    name: s
+    in: query
+    description: Sort string. Comma separated list of fields prefixed with '+' for ascending or '-' for descending. Example '?s=+a,-b' Fields use dot notation for embedded documents. Example 'outer.inner' refers to field inner contained in field outer.
+    type: string
+  query:
+    name: q
+    in: query
+    description: Query string. Comma separated list of key, comparator, value pairs. Comparator supports '==', '<=', '>=', '<', '>', '!='. Example '?q=a==b,c!=d'. Keys are fields in documents and use dot notation for embedded documents. Example 'outer.inner' refers to field inner contained in field outer.
+    type: string
+  projection:
+    name: p
+    in: query
+    description: Projection string. Comma separated list of fields to include in the response. Example '?p=a,b' Fields use dot notation for embedded documents. Example 'outer.inner' refers to field inner contained in field outer.
+    type: string
