@@ -10,11 +10,36 @@ consumes:
 produces:
   - application/json
   - text/html; charset=utf-8
-basePath: /0.0.1
+basePath: /jvms/0.0.1
 paths:
-  /:
+  '/update/systems/{systemId}/ts/{timeStamp}':
+    parameters:
+      - name: systemId
+        in: path
+        required: true
+        type: string
+        description: The system ID of the jvms to update.
+      - name: timeStamp
+        in: path
+        required: true
+        type: string
+        description: The timestamp to set the last_updated field for.
+    put:
+      description: 'Set last updated for jvm information to {timeStamp}'
+      responses:
+        '200':
+          description: OK
+      parameters:
+      - $ref: "#/parameters/put-body-jvms-update"
+  '/systems/{systemId}':
+    parameters:
+      - name: systemId
+        in: path
+        required: true
+        type: string
+        description: The system ID for the jvms.
     get:
-      description: Get jvm information.
+      description: 'Get jvms for system {systemId}'
       parameters:
         - $ref: '#/parameters/limit'
         - $ref: '#/parameters/offset'
@@ -26,30 +51,20 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/jvm-info-response'
-    put:
-      description: Update jvm information.
-      parameters:
-        - $ref: '#/parameters/put-body'
-        - $ref: '#/parameters/query'
-      responses:
-        '200':
-          description: OK
+            $ref: '#/definitions/jvm-infos'
     post:
-      description: Add jvm information
+      description: 'Add jvms for system {systemId}'
       parameters:
         - $ref: '#/parameters/jvm-infos'
       responses:
         '200':
           description: OK
     delete:
-      description: Delete jvm information.
-      parameters:
-        - $ref: '#/parameters/query'
+      description: 'Delete all jvms on system {systemId}'
       responses:
         '200':
           description: OK
-  /list:
+  '/tree':
     get:
       description: Get jvm information organized by systemId
       parameters:
@@ -61,12 +76,38 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/jvm-list-response'
+  '/systems/{systemId}/jvms/{jvmId}':
+    parameters:
+    - name: systemId
+      in: path
+      required: true
+      type: string
+      description: The system ID
+    - name: jvmId
+      in: path
+      required: true
+      type: string
+      description: The ID of the jvm
+    get:
+      description: 'Get information for the JVM with id {jvmId} running on system {systemId}'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/jvm-info'
+    delete:
+      description: 'Delete the JVM with id {jvmId} running on system {systemId}'
+      responses:
+        '200':
+          description: OK
+    put:
+      description: 'Update the JVM with id {jvmId} running on system {systemId}'
+      responses:
+        '200':
+          description: OK
+      parameters:
+      - $ref: "#/parameters/put-body-jvm"
 definitions:
-  jvm-info-response:
-    type: object
-    properties:
-      response:
-        $ref: '#/definitions/jvm-info'
   jvm-infos:
     type: array
     items:
@@ -74,8 +115,6 @@ definitions:
   jvm-info:
     type: object
     properties:
-      systemId:
-        type: string
       agentId:
         type: string
       jvmId:
@@ -115,6 +154,9 @@ definitions:
         format: int64
       username:
         type: string
+      last_updated:
+        type: integer
+        format: int64
   environment-items:
     type: object
     properties:
@@ -143,6 +185,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/jvm-info'
+  put-body-last_updated:
+    type: array
+    items:
+      type: string
 parameters:
   jvm-infos:
     name: jvm-infos
@@ -151,16 +197,25 @@ parameters:
     required: true
     schema:
       $ref: '#/definitions/jvm-infos'
-  put-body:
-    name: putBody
+  put-body-jvm:
+    name: body
     in: body
     description: >-
-      The JSON object containing a 'set' object. This contains single item JSON
-      objects that specify the field to replace and the JSON value to replace
-      with. Example { "set" : { "field" : "value", "field2":{"object":"item"} }
+      The JSON object containing a 'set' object. This contains single item JSON 
+      objects that specify the field to replace and the JSON value to replace with.
+      Must not include 'systemId' and 'jvmId' fields. Example { "set" : {
+      "field" : "value", "field2":{"object":"item"} }
     required: true
     schema:
       $ref: '#/definitions/put-body'
+  put-body-jvms-update:
+    name: body
+    in: body
+    description: >-
+      An array of jvmIds for which to update the last_updated field.
+    required: true
+    schema:
+      $ref: '#/definitions/put-body-last_updated'
   limit:
     name: limit
     in: query
@@ -217,3 +272,4 @@ parameters:
     type: boolean
     default: true
     required: false
+
