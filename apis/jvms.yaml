@@ -241,7 +241,8 @@ parameters:
     name: timeStamp
     in: path
     required: true
-    type: string
+    type: integer
+    format: int64
     description: The timestamp to set the last_updated field for.
   jvms-post-body:
     name: body
