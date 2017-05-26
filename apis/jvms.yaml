@@ -47,6 +47,9 @@ paths:
     - $ref: '#/parameters/jvm-id'
     get:
       description: 'Get information for the JVM with id {jvmId} running on system {systemId}'
+      parameters:
+        - $ref: '#/parameters/include'
+        - $ref: '#/parameters/exclude'
       responses:
         '200':
           description: OK
