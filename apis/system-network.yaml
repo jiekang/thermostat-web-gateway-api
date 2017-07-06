@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 0.0.1
-  title: Thermostat Web Gateway System Information API
+  title: Thermostat Web Gateway System Network Info API
   license:
     name: GPL v2 with Classpath Exception
     url: 'http://www.gnu.org/licenses'
@@ -10,29 +10,13 @@ consumes:
 produces:
   - application/json
   - text/html; charset=utf-8
-basePath: /systems/0.0.1
+basePath: /system-network/0.0.1
 paths:
-  /:
-    get:
-      description: Get information for all systems.
-      parameters:
-        - $ref: '#/parameters/limit'
-        - $ref: '#/parameters/offset'
-        - $ref: '#/parameters/sort'
-        - $ref: '#/parameters/include'
-        - $ref: '#/parameters/exclude'
-        - $ref: '#/parameters/query'
-        - $ref: '#/parameters/alive'
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/systems-get-response'
   /systems/{systemId}:
     parameters:
       - $ref: '#/parameters/system-id'
     get:
-      description: Get information for system {systemId}.
+      description: Get network information for system {systemId}.
       parameters:
         - $ref: '#/parameters/limit'
         - $ref: '#/parameters/offset'
@@ -40,73 +24,69 @@ paths:
         - $ref: '#/parameters/include'
         - $ref: '#/parameters/exclude'
         - $ref: '#/parameters/query'
-        - $ref: '#/parameters/alive'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/systems-get-response'
+            $ref: '#/definitions/network-info-get-response'
     put:
-      description: Update information for system {systemId}.
+      description: Update network information for system {systemId}.
       parameters:
-        - $ref: '#/parameters/systems-put-body'
+        - $ref: '#/parameters/network-info-put-body'
         - $ref: '#/parameters/query'
       responses:
         '200':
           description: OK
     post:
-      description: Add information for system {systemId}
+      description: Add network information for system {systemId}
       parameters:
-        - $ref: '#/parameters/system-info-array'
+        - $ref: '#/parameters/network-info-array'
       responses:
         '200':
           description: OK
     delete:
-      description: Delete information for system ID {systemId}.
+      description: Delete network information for system ID {systemId}.
       parameters:
         - $ref: '#/parameters/query'
       responses:
         '200':
           description: OK
 definitions:
-  systems-get-response:
+  network-info-get-response:
     type: object
     properties:
       response:
-          $ref: '#/definitions/system-info-array'
-  system-info-array:
+        $ref: '#/definitions/network-info-array'
+  network-info-array:
     type: array
     items:
-      $ref: '#/definitions/system-info'
-  system-info:
+      $ref: '#/definitions/network-info'
+  network-info:
     type: object
     properties:
       systemId:
         type: string
       agentId:
         type: string
-      hostname:
-        type: string
-      osName:
-        type: string
-      osKernel:
-        type: string
-      osArch:
-        type: string
-      cpuCount:
-        type: integer
-      cpuModel:
-        type: string
-      totalMemory:
+      timeStamp:
         type: integer
         format: int64
-      timeCreated:
-        type: integer
-        format: int64
-      lastUpdated:
-        type: integer
-        format: int64
-  systems-put-body:
+      interfaces:
+        type: array
+        items:
+          $ref: '#/definitions/interface-info'
+  interface-info:
+    type: object
+    properties:
+      interfaceName:
+        type: string
+      displayName:
+        type: string
+      ipv4Addr:
+        type: string
+      ipV6Addr:
+        type: string
+  network-info-put-body:
     type: object
     properties:
       "set":
@@ -117,14 +97,14 @@ parameters:
     in: path
     required: true
     type: string
-  system-info-array:
-    name: system-info-array
+  network-info-array:
+    name: network-info-array
     in: body
-    description: The system information
+    description: The system network information
     required: true
     schema:
-      $ref: '#/definitions/system-info-array'
-  systems-put-body:
+      $ref: '#/definitions/network-info-array'
+  network-info-put-body:
     name: body
     in: body
     description: >-
@@ -134,14 +114,7 @@ parameters:
       "field" : "value", "field2":{"object":"item"} }
     required: true
     schema:
-      $ref: '#/definitions/systems-put-body'
-  alive:
-    name: alive
-    in: query
-    description: Whether to return only systems that are currently running
-    type: boolean
-    required: false
-    default: true
+      $ref: '#/definitions/network-info-put-body'
   limit:
     name: limit
     in: query
