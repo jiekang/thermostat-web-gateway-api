@@ -48,11 +48,11 @@ paths:
       responses:
         '200':
           description: OK
-  /delta/{collectorName}:
+  /delta/{jvmId}:
     parameters:
-      - $ref: '#/parameters/collector-name'
+      - $ref: '#/parameters/jvm-id'
     get:
-      description: Get jvm gc information for collector {collectorName} with deltas for wallTime. Always sorted by timeStamp ascending
+      description: Get jvm gc information for jvm {jvmId} with deltas for wallTime. Always sorted by timeStamp ascending
       parameters:
         - $ref: '#/parameters/limit'
         - $ref: '#/parameters/offset'
@@ -140,6 +140,12 @@ parameters:
     required: true
     schema:
       $ref: '#/definitions/jvm-gc-stats'
+  jvm-id:
+    name: jvmId
+    in: path
+    required: true
+    type: string
+    description: The ID of the jvm
   put-body:
     name: putBody
     in: body
@@ -184,10 +190,3 @@ parameters:
     description: After timeStamp. A long that specifies to return documents after the timeStamp.
     type: integer
     format: int64
-  collector-name:
-    name: collectorName
-    in: path
-    description: The name of the collector to output stats for
-    type: string
-    required: true
-    
