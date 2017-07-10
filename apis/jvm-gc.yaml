@@ -48,6 +48,21 @@ paths:
       responses:
         '200':
           description: OK
+  /delta/{collectorName}:
+    parameters:
+      - $ref: '#/parameters/collector-name'
+    get:
+      description: Get jvm gc information for collector {collectorName} with deltas for wallTime. Always sorted by timeStamp ascending
+      parameters:
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/before'
+        - $ref: '#/parameters/after'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/jvm-gc-delta-response'
 definitions:
   jvm-gc-stats-response:
     type: object
@@ -71,8 +86,34 @@ definitions:
         type: string
       runCount:
         $ref: '#/definitions/metric'
-      wallTime:
+      wallTimeInMicros:
         $ref: '#/definitions/metric'
+  jvm-gc-delta-response:
+    type: object
+    properties:
+      response:
+        $ref: '#/definitions/jvm-gc-delta-stats'
+  jvm-gc-delta-stats:
+    type: array
+    items:
+      $ref: '#/definitions/jvm-gc-delta-stat'
+  jvm-gc-delta-stat:
+      type: object
+      properties:
+        agentId:
+          type: string
+        jvmId:
+          type: string
+        timeStamp:
+          $ref: '#/definitions/timestamp'
+        collectorName:
+          type: string
+        runCount:
+          $ref: '#/definitions/metric'
+        wallTimeInMicros:
+          $ref: '#/definitions/metric'
+        wallTimeDelta:
+          $ref: '#/definitions/metric'
 
   metric:
     type: object
@@ -131,3 +172,22 @@ parameters:
     in: query
     description: Projection string. Comma separated list of fields to include in the response. Example '?p=a,b' Fields use dot notation for embedded documents. Example 'outer.inner' refers to field inner contained in field outer.
     type: string
+  before:
+    name: b
+    in: query
+    description: Before timeStamp. A long that specifies to return documents before the timeStamp.
+    type: integer
+    format: int64
+  after:
+    name: a
+    in: query
+    description: After timeStamp. A long that specifies to return documents after the timeStamp.
+    type: integer
+    format: int64
+  collector-name:
+    name: collectorName
+    in: path
+    description: The name of the collector to output stats for
+    type: string
+    required: true
+    
